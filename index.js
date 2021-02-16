@@ -1,25 +1,24 @@
 const redux =  require('redux')
 const createStore = redux.createStore;
+const combineReducer = redux.combineReducers;
+const {incrementAction, decrementAction} = require('./actions/CounterActions')
+const {addItemAction} = require('./actions/ListActions')
+const counterReducer = require('./reducers/CounterReducer')
+const {listReducer} = require('./reducers/ListReducer')
 
-const incrementAction = (value)=>{ return {type:'INCREMENT', payload: value || 1}}
-const decrementAction = (value)=>{ return {type:'DECREMENT', payload: value || 1}}
+const allReducers = combineReducer({
+    counter: counterReducer,
+    list: listReducer
+})
 
-function counterReducer(state = 0, action){
-
-    switch(action.type){
-        case 'INCREMENT':
-            return state + action.payload;
-        case 'DECREMENT':
-            return state - action.payload;
-        default:
-            return state;
-    }
-}
-
-const store = createStore(counterReducer)
+const store = createStore(allReducers)
 
 console.log(store.getState())
 
 store.subscribe(()=>{console.log(store.getState())})
 
-store.dispatch(incrementAction())
+store.dispatch(incrementAction(2))
+store.dispatch(incrementAction(2))
+store.dispatch(incrementAction(2))
+store.dispatch(addItemAction('Um novo Item'))
+store.dispatch(decrementAction(2))
